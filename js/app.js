@@ -135,7 +135,7 @@ async function queryIPOther() {
         return;
     }
     
-    await fetchIPInfo(ip);
+    await fetchIPInfoOther(ip);
 }
 
 // 获取IP信息
