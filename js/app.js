@@ -143,7 +143,7 @@ async function fetchIPInfoOther(ip) {
     showLoading();
 
     try {
-        const url = ip ? `${OTHER_API_BASE_URL}&ip=` : `${OTHER_API_BASE_URL}`;
+        const url = ip ? `${OTHER_API_BASE_URL}&ip=${ip}` : `${OTHER_API_BASE_URL}`;
         const response = await fetch(url);
 
         if (!response.ok) {
