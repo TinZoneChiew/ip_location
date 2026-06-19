@@ -207,7 +207,7 @@ function displayIPInfo(data) {
     document.getElementById('country').textContent = data?.country ? data?.country : data?.guo || '-';
     document.getElementById('region').textContent = data?.region ? data?.region : data?.zhou || '-';
     document.getElementById('city').textContent = data?.city ? data?.city : data?.sheng + data?.shi || '-';
-    document.getElementById('zip').textContent = data?.postal ? data?.postal : data?.shicode || '-';
+    document.getElementById('zip').textContent = data?.postal || '-';
     document.getElementById('isp').textContent = ispName;
     document.getElementById('org').textContent = orgName;
     document.getElementById('location').textContent =
