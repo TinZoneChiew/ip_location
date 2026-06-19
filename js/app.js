@@ -122,7 +122,19 @@ async function fetchIPInfo(ip) {
 }
 
 // 获取IP信息
-async function fetchIPInfoOther(ip) {
+async function fetchIPInfoOther() {
+    const ip = elements.ipInput.value.trim();
+
+    if (!ip) {
+        showError('⚠️ 请输入IP地址');
+        return;
+    }
+
+    if (!validateIP(ip)) {
+        showError('⚠️ 请输入有效的IP地址格式（如：8.8.8.8）');
+        return;
+    }
+    
     showLoading();
 
     try {
