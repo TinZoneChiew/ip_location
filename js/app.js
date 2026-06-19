@@ -1,8 +1,6 @@
 // ipinfo.io配置
 const API_BASE_URL = 'https://ipinfo.io/';
 
-const OTHER_API_BASE_URL = 'https://cn.apihz.cn/api/ip/chaapi.php?id=10017159&key=4a4ca771da6eb78444a4829fdda2f51d';
-
 // 页面元素
 const elements = {
     ipInput: null,
@@ -121,56 +119,56 @@ async function fetchIPInfo(ip) {
     }
 }
 
-// 获取IP信息
-async function queryIPOther() {
-    const ip = elements.ipInput.value.trim();
+// // 获取IP信息
+// async function queryIPOther() {
+//     const ip = elements.ipInput.value.trim();
 
-    if (!ip) {
-        showError('⚠️ 请输入IP地址');
-        return;
-    }
+//     if (!ip) {
+//         showError('⚠️ 请输入IP地址');
+//         return;
+//     }
 
-    if (!validateIP(ip)) {
-        showError('⚠️ 请输入有效的IP地址格式（如：8.8.8.8）');
-        return;
-    }
+//     if (!validateIP(ip)) {
+//         showError('⚠️ 请输入有效的IP地址格式（如：8.8.8.8）');
+//         return;
+//     }
     
-    await fetchIPInfoOther(ip);
-}
+//     await fetchIPInfoOther(ip);
+// }
 
-// 获取IP信息
-async function fetchIPInfoOther(ip) {
-    showLoading();
+// // 获取IP信息
+// async function fetchIPInfoOther(ip) {
+//     showLoading();
 
-    try {
-        const url = ip ? `${OTHER_API_BASE_URL}&ip=${ip}` : `${OTHER_API_BASE_URL}`;
-        const response = await fetch(url);
+//     try {
+//         const url = ip ? `${OTHER_API_BASE_URL}&ip=${ip}` : `${OTHER_API_BASE_URL}`;
+//         const response = await fetch(url);
 
-        if (!response.ok) {
-            throw new Error('网络请求失败或IP地址无效');
-        }
+//         if (!response.ok) {
+//             throw new Error('网络请求失败或IP地址无效');
+//         }
 
-        const data = await response.json();
+//         const data = await response.json();
 
-        // ipinfo.io 使用 bogon 字段表示无效IP
-        if (data.code != 200) {
-            throw new Error('查询失败，请检查IP地址是否正确');
-        }
+//         // ipinfo.io 使用 bogon 字段表示无效IP
+//         if (data.code != 200) {
+//             throw new Error('查询失败，请检查IP地址是否正确');
+//         }
 
-        displayIPInfo(data);
+//         displayIPInfo(data);
 
-        // 如果是查询当前IP，自动填入输入框
-        if (!ip) {
-            elements.ipInput.value = data.ip;
-        }
+//         // 如果是查询当前IP，自动填入输入框
+//         if (!ip) {
+//             elements.ipInput.value = data.ip;
+//         }
 
-    } catch (error) {
-        console.error('查询IP信息失败:', error);
-        showError(`❌ 查询失败: ${error.message}`);
-    } finally {
-        hideLoading();
-    }
-}
+//     } catch (error) {
+//         console.error('查询IP信息失败:', error);
+//         showError(`❌ 查询失败: ${error.message}`);
+//     } finally {
+//         hideLoading();
+//     }
+// }
 
 // 显示IP信息
 function displayIPInfo(data) {
