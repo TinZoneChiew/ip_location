@@ -160,6 +160,10 @@ button:active {
     transform: scale(0.98);
 }
 
+.button-icon {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
 .btn-icon {
     font-size: 1em;
 }
