@@ -1,6 +1,8 @@
 // ipinfo.io配置
 const API_BASE_URL = 'https://ipinfo.io/';
 
+const OTHER_API_BASE_URL = 'https://cn.apihz.cn/api/ip/chaapi.php?id=10017159&key=4a4ca771da6eb78444a4829fdda2f51d';
+
 // 页面元素
 const elements = {
     ipInput: null,
@@ -119,6 +121,40 @@ async function fetchIPInfo(ip) {
     }
 }
 
+// 获取IP信息
+async function fetchIPInfoOther(ip) {
+    showLoading();
+
+    try {
+        const url = ip ? `${OTHER_API_BASE_URL}&ip=` : `${OTHER_API_BASE_URL}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+            throw new Error('网络请求失败或IP地址无效');
+        }
+
+        const data = await response.json();
+
+        // ipinfo.io 使用 bogon 字段表示无效IP
+        if (data.code != 200) {
+            throw new Error('查询失败，请检查IP地址是否正确');
+        }
+
+        displayIPInfo(data);
+
+        // 如果是查询当前IP，自动填入输入框
+        if (!ip) {
+            elements.ipInput.value = data.ip;
+        }
+
+    } catch (error) {
+        console.error('查询IP信息失败:', error);
+        showError(`❌ 查询失败: ${error.message}`);
+    } finally {
+        hideLoading();
+    }
+}
+
 // 显示IP信息
 function displayIPInfo(data) {
     // 更新IP地址
@@ -130,10 +166,14 @@ function displayIPInfo(data) {
 
     // 解析经纬度
     let lat = null, lon = null;
-    if (data.loc) {
+    if (data?.loc) {
         const [latitude, longitude] = data.loc.split(',');
         lat = parseFloat(latitude);
         lon = parseFloat(longitude);
+    }
+    else if (data?.lat && data?.lon) {
+        lat = parseFloat(data?.lat);
+        lon = parseFloat(data?.lon);
     }
 
     // 解析组织和ISP信息
@@ -141,23 +181,26 @@ function displayIPInfo(data) {
     let ispName = data.org || '-';
     let orgName = data.org || '-';
 
-    if (data.org && data.org.includes(' ')) {
+    if (data?.org && data.org.includes(' ')) {
         // 提取AS号后面的ISP名称
         const parts = data.org.split(' ');
         orgName = parts[0]; // AS号
         ispName = parts.slice(1).join(' '); // ISP名称
     }
+    else if (data?.isp) {
+        ispName = data?.isp;
+    }
 
     // 更新各项信息
-    document.getElementById('country').textContent = data.country || '-';
-    document.getElementById('region').textContent = data.region || '-';
-    document.getElementById('city').textContent = data.city || '-';
-    document.getElementById('zip').textContent = data.postal || '-';
+    document.getElementById('country').textContent = data?.country ? data?.country : data?.guo || '-';
+    document.getElementById('region').textContent = data?.region ? data?.region : data?.zhou || '-';
+    document.getElementById('city').textContent = data?.city ? data?.city : data?.shi || '-';
+    document.getElementById('zip').textContent = data?.postal ? data?.postal : data?.shicode || '-';
     document.getElementById('isp').textContent = ispName;
     document.getElementById('org').textContent = orgName;
     document.getElementById('location').textContent =
         lat && lon ? `${lat}, ${lon}` : '-';
-    document.getElementById('timezone').textContent = data.timezone || '-';
+    document.getElementById('timezone').textContent = data?.timezone || '-';
 
     // 更新地图链接
     const mapLink = document.getElementById('mapLink');
