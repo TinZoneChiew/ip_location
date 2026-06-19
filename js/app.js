@@ -122,7 +122,7 @@ async function fetchIPInfo(ip) {
 }
 
 // 获取IP信息
-async function fetchIPInfoOther() {
+async function queryIPOther() {
     const ip = elements.ipInput.value.trim();
 
     if (!ip) {
@@ -135,6 +135,11 @@ async function fetchIPInfoOther() {
         return;
     }
     
+    await fetchIPInfo(ip);
+}
+
+// 获取IP信息
+async function fetchIPInfoOther(ip) {
     showLoading();
 
     try {
